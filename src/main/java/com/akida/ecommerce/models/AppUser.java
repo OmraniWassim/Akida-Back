@@ -26,8 +26,8 @@ public class AppUser extends BasicEntity implements UserDetails {
     @SequenceGenerator(name="appuser_sequence",sequenceName ="appuser_sequence",allocationSize = 1)
     @GeneratedValue(strategy = GenerationType.SEQUENCE,generator = "appuser_sequence")
     private Long id;
-    private String FirstName;
-    private String LastName;
+    private String firstName;
+    private String lastName;
     @Column(unique = true)
     private String email;
     private String password;
@@ -36,7 +36,7 @@ public class AppUser extends BasicEntity implements UserDetails {
     private Boolean enabled=false;
     private Long telNumber;
     private String address;
-    private Long CIN;
+    private Long cin;
     @OneToMany(mappedBy = "appUser", cascade = CascadeType.ALL)
     private List<Order> orders;
 
@@ -49,50 +49,20 @@ public class AppUser extends BasicEntity implements UserDetails {
 
 
 
-    public AppUser(String FirstName,
-                   String LastName,
+    public AppUser(String firstName,
+                   String lastName,
                    String email,
                    String password,
                    AppUserRole appUserRole
     ) {
-        this.FirstName = FirstName;
-        this.LastName = LastName;
+        this.firstName = firstName;
+        this.lastName = lastName;
         this.email = email;
         this.password = password;
         this.appUserRole = appUserRole;
 
     }
 
-    //for creating and testing but can be removed
-    public AppUser(String FirstName,
-                   String LastName,
-                   String email,
-                   String password,
-                   boolean enabled,
-                   AppUserRole appUserRole
-    ) {
-        this.FirstName = FirstName;
-        this.LastName = LastName;
-        this.email = email;
-        this.password = password;
-        this.enabled  = enabled;
-        this.appUserRole = appUserRole;
-
-    }
-    public AppUser(Long id,
-                   String FirstName,
-                   String LastName,
-                   String email,
-                   String password,
-                   AppUserRole appUserRole
-    ) {
-        this.id=id;
-        this.FirstName = FirstName;
-        this.LastName = LastName;
-        this.email = email;
-        this.password = password;
-        this.appUserRole = appUserRole;
-    }
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
 

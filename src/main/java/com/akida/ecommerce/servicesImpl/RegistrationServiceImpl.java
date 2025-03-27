@@ -51,18 +51,17 @@ public class RegistrationServiceImpl implements RegistrationService {
     public String register(RegistrationRequest request) {
         boolean isValidEmail=emailValidator.test(request.email());
         if(!isValidEmail){
-            //throw new IllegalStateException("email n'est pas validee");
-            return ("email n'est pas validee");
+            throw new IllegalStateException("email n'est pas validee");
         }
 
 
         String token = appUserService.signUpUser(
                 new AppUser(
-                        request.first_name(),
-                        request.last_name(),
+                        request.firstName(),
+                        request.lastName(),
                         request.email(),
                         request.password(),
-                        AppUserRole.valueOf(String.valueOf(request.app_user_role()))
+                        AppUserRole.valueOf(String.valueOf(request.appUserRole()))
 
 
                 )
@@ -70,8 +69,8 @@ public class RegistrationServiceImpl implements RegistrationService {
 
         String link = "http://localhost:8081/api/v1/registration/confirm?token=" + token;
         emailSender.send(
-                request.email(),"pfe@leoni.com",
-                buildEmail(request.email(), request.password(), request.first_name(), link));
+                request.email(),"akida@software.com",
+                buildEmail(request.email(), request.password(), request.firstName(), link));
 
         return token;
     }
@@ -89,6 +88,7 @@ public class RegistrationServiceImpl implements RegistrationService {
 
 
     @Override
+    //TODO
     public void updateAppUser(RegistrationRequest request, Long id) {
         AppUser exist = appUserRepository.findById(id).orElse(null);
         assert exist != null;
@@ -96,11 +96,11 @@ public class RegistrationServiceImpl implements RegistrationService {
         /*if(request.password().isEmpty()){
             appUser = new AppUser(
                     id,
-                    request.first_name(),
-                    request.last_name(),
+                    request.firstName(),
+                    request.lastName(),
                     request.email(),
                     exist.getPassword(),
-                    AppUserRole.valueOf(String.valueOf(request.app_user_role())),
+                    AppUserRole.valueOf(String.valueOf(request.appUserRole())),
                     exist.isEnabled()
 
 
@@ -109,11 +109,11 @@ public class RegistrationServiceImpl implements RegistrationService {
         }else {
             appUser = new AppUser(
                     id,
-                    request.first_name(),
-                    request.last_name(),
+                    request.firstName(),
+                    request.lastName(),
                     request.email(),
                     request.password(),
-                    AppUserRole.valueOf(String.valueOf(request.app_user_role())),
+                    AppUserRole.valueOf(String.valueOf(request.appUserRole())),
                     exist.isEnabled()
 
             );
