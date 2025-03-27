@@ -21,7 +21,7 @@ import java.util.List;
 @NoArgsConstructor
 @Entity
 @AllArgsConstructor
-public class AppUser implements UserDetails {
+public class AppUser extends BasicEntity implements UserDetails {
     @Id
     @SequenceGenerator(name="appuser_sequence",sequenceName ="appuser_sequence",allocationSize = 1)
     @GeneratedValue(strategy = GenerationType.SEQUENCE,generator = "appuser_sequence")
@@ -36,9 +36,15 @@ public class AppUser implements UserDetails {
     private Boolean enabled=false;
     private Long telNumber;
     private String address;
-    private Long SIN;
-//    @OneToMany
-//    private List<Commande> commandes;
+    private Long CIN;
+    @OneToMany(mappedBy = "appUser", cascade = CascadeType.ALL)
+    private List<Order> orders;
+
+    @OneToMany(mappedBy = "appUser", cascade = CascadeType.ALL)
+    private List<Favorite> favorites;
+
+    @OneToMany(mappedBy = "appUser", cascade = CascadeType.ALL)
+    private List<Rating> ratings;
 
 
 
