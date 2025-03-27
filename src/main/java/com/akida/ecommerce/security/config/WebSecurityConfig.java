@@ -3,7 +3,7 @@ package com.akida.ecommerce.security.config;
 
 import com.akida.ecommerce.filter.JwtAuthFilter;
 import com.akida.ecommerce.repository.AppUserRepository;
-import com.akida.ecommerce.service.AppUserService;
+import com.akida.ecommerce.servicesImpl.AppUserServiceImpl;
 import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -29,7 +29,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 public class WebSecurityConfig {
     private final AppUserRepository repository;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
-    private final AppUserService appUserService;
+    private final AppUserServiceImpl appUserServiceImpl;
     private final JwtAuthFilter jwtAuthFilter;
 
 
@@ -52,7 +52,7 @@ public class WebSecurityConfig {
     @Bean
     public AuthenticationProvider authenticationProvider() {
         DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
-        authProvider.setUserDetailsService(appUserService);
+        authProvider.setUserDetailsService(appUserServiceImpl);
         authProvider.setPasswordEncoder(bCryptPasswordEncoder);
         return authProvider;
     }

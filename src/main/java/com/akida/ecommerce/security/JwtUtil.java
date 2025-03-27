@@ -1,4 +1,4 @@
-package com.akida.ecommerce.service;
+package com.akida.ecommerce.security;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
@@ -13,10 +13,9 @@ import org.springframework.stereotype.Component;
 import java.security.Key;
 import java.util.*;
 import java.util.function.Function;
-import java.util.stream.Collectors;
 
 @Component
-public class JwtService {
+public class JwtUtil {
     public static final String SECRET = "5367566B59703373367639792F423F4528482B4D6251655468576D5A71347437";
 
     private String createToken(Map<String, Object> claims, String userName) {
@@ -31,7 +30,7 @@ public class JwtService {
     public String generateToken(Authentication authentication) {
         String username = authentication.getName();
         Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
-        List<String> roles = authorities.stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList());
+        List<String> roles = authorities.stream().map(GrantedAuthority::getAuthority).toList();
         Map<String, Object> claims = new HashMap<>();
         claims.put("roles", roles);
         return createToken(claims, username);

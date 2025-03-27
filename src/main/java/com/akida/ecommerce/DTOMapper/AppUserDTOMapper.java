@@ -20,7 +20,7 @@ public class AppUserDTOMapper implements Function<AppUser, AppUserDTO> {
                 appUser.getEmail(),
                 appUser.getAuthorities()
                         .stream().map(GrantedAuthority::getAuthority)
-                        .collect(Collectors.toList()),
+                        .toList(),
 
                 appUser.isEnabled()
         );

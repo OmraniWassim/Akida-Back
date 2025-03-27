@@ -1,4 +1,4 @@
-package com.akida.ecommerce.service;
+package com.akida.ecommerce.servicesImpl;
 
 
 import com.akida.ecommerce.registration.EmailValidator;
@@ -14,6 +14,9 @@ import com.akida.ecommerce.registration.token.ConfirmationToken;
 import com.akida.ecommerce.registration.token.ConfirmationTokenRepository;
 import com.akida.ecommerce.registration.token.ConfirmationTokenService;
 import com.akida.ecommerce.repository.AppUserRepository;
+import com.akida.ecommerce.security.JwtUtil;
+import com.akida.ecommerce.services.AppUserService;
+import com.akida.ecommerce.services.RegistrationService;
 import lombok.AllArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -31,7 +34,7 @@ import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
-public class RegistrationService {
+public class RegistrationServiceImpl implements RegistrationService {
 
     private final AppUserService appUserService;
     private final ConfirmationTokenService confirmationTokenService;
@@ -41,9 +44,10 @@ public class RegistrationService {
     private final AppUserRepository appUserRepository;
     private final ConfirmationTokenRepository confirmationTokenRepository;
     private final AppUserDTOMapper appUserDTOMapper;
-    private final JwtService jwtService;
+    private final JwtUtil jwtUtil;
     private AuthenticationManager authenticationManager;
 
+    @Override
     public String register(RegistrationRequest request) {
         boolean isValidEmail=emailValidator.test(request.email());
         if(!isValidEmail){
@@ -75,7 +79,8 @@ public class RegistrationService {
 
 
 
-    public List<AppUserDTO> findAllAppUsers () {
+    @Override
+    public List<AppUserDTO> findAllAppUsers() {
         return appUserRepository.findAll()
                 .stream()
                 .map(appUserDTOMapper)
@@ -83,7 +88,8 @@ public class RegistrationService {
     }
 
 
-    public void updateAppUser(RegistrationRequest request,Long id) {
+    @Override
+    public void updateAppUser(RegistrationRequest request, Long id) {
         AppUser exist = appUserRepository.findById(id).orElse(null);
         assert exist != null;
         AppUser appUser;
@@ -116,75 +122,84 @@ public class RegistrationService {
 
 
     }
+    @Override
     public Optional<AppUserDTO> findById(Long id){
         return appUserRepository.findById(id).map(appUserDTOMapper);
     }
 
-
+    @Override
     public void deleteAppUser(Long id) {
         if (confirmationTokenRepository.findById(id).isPresent()) {
             confirmationTokenRepository.deleteById(id);
             appUserRepository.deleteById(id);
         }
     }
+
+    @Override
     public List<AppUserDTO> findByRole(AppUserRole role) {
         List<AppUser> appUsers = appUserRepository.findByAppUserRole(role);
         return appUsers.stream().map(appUserDTOMapper).collect(Collectors.toList());
     }
 
-     public HashMap<String,String> login(@RequestBody LoginRequest loginRequest){
-         HashMap<String, String> map = new HashMap<>();
-         BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
-         AppUser appUser = appUserRepository.findByEmail(loginRequest.email()).orElse(null);
-         assert appUser != null;
-         String role=appUser.getAppUserRole().toString();
 
-         if (!encoder.matches(loginRequest.password(), appUser.getPassword())) {
-             map.put("response", "password");
-             return map;
+    @Override
+    public HashMap<String,String> login(@RequestBody LoginRequest loginRequest){
+        HashMap<String, String> map = new HashMap<>();
+        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+        AppUser appUser = appUserRepository.findByEmail(loginRequest.email()).orElse(null);
+        assert appUser != null;
+        String role=appUser.getAppUserRole().toString();
 
-
-         } else if ((appUser.isEnabled()) &&
-                 encoder.matches(loginRequest.password(), appUser.getPassword())) {
-             map.put("response", role);
-             map.put("FirstName", appUser.getFirstName());
-             map.put("LastName", appUser.getLastName());
-             map.put("currentUserId", appUser.getId().toString());
-             Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginRequest.email(), loginRequest.password()));
-             map.put("token", jwtService.generateToken(authentication));
+        if (!encoder.matches(loginRequest.password(), appUser.getPassword())) {
+            map.put("response", "password");
+            return map;
 
 
-             return map;
-         } else if (!appUser.isEnabled()) {
-             map.put("response", "disabled");
-             return map;
-         }
-         return null;
-     }
-     public HashMap<String,String> ChangePWD(Long id, PwdRequest newPWD){
-         HashMap<String, String> map = new HashMap<>();
-         AppUser appUser=appUserRepository.findById(id).orElse(null);
-         BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
-         assert appUser != null;
-         if(!encoder.matches(newPWD.current(), appUser.getPassword())){
-             map.put("response", "wrong password");
-         } else if (!newPWD.newPWD().equals(newPWD.renew())) {
-             map.put("response", "password mismatch");
-         }else {
-             appUser.setPassword(bCryptPasswordEncoder.encode(newPWD.newPWD()));
-             map.put("response", "success");
-             appUserRepository.save(appUser);
-         }
+        } else if ((appUser.isEnabled()) &&
+                encoder.matches(loginRequest.password(), appUser.getPassword())) {
+            map.put("response", role);
+            map.put("FirstName", appUser.getFirstName());
+            map.put("LastName", appUser.getLastName());
+            map.put("currentUserId", appUser.getId().toString());
+            Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginRequest.email(), loginRequest.password()));
+            map.put("token", jwtUtil.generateToken(authentication));
+
+
+            return map;
+        } else if (!appUser.isEnabled()) {
+            map.put("response", "disabled");
+            return map;
+        }
+        return null;
+    }
+
+
+    @Override
+    public HashMap<String,String> ChangePWD(Long id, PwdRequest newPWD){
+        HashMap<String, String> map = new HashMap<>();
+        AppUser appUser=appUserRepository.findById(id).orElse(null);
+        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+        assert appUser != null;
+        if(!encoder.matches(newPWD.current(), appUser.getPassword())){
+            map.put("response", "wrong password");
+        } else if (!newPWD.newPWD().equals(newPWD.renew())) {
+            map.put("response", "password mismatch");
+        }else {
+            appUser.setPassword(bCryptPasswordEncoder.encode(newPWD.newPWD()));
+            map.put("response", "success");
+            appUserRepository.save(appUser);
+        }
 
 
 
-         return map;
+        return map;
 
-     }
+    }
 
 
 
     @Transactional
+    @Override
     public String confirmToken(String token) {
         ConfirmationToken confirmationToken = confirmationTokenService
                 .getToken(token)
@@ -206,6 +221,7 @@ public class RegistrationService {
                 confirmationToken.getAppUser().getEmail());
         return "confirmed";
     }
+
     private String buildEmail(String email,String password,String name, String link) {
         return "<div style=\"font-family:Helvetica,Arial,sans-serif;font-size:16px;margin:0;color:#0b0c0c\">\n" +
                 "\n" +

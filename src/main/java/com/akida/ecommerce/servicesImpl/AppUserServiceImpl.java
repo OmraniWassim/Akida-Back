@@ -1,4 +1,4 @@
-package com.akida.ecommerce.service;
+package com.akida.ecommerce.servicesImpl;
 
 
 
@@ -6,6 +6,7 @@ import com.akida.ecommerce.models.AppUser;
 import com.akida.ecommerce.registration.token.ConfirmationToken;
 import com.akida.ecommerce.registration.token.ConfirmationTokenService;
 import com.akida.ecommerce.repository.AppUserRepository;
+import com.akida.ecommerce.services.AppUserService;
 import lombok.AllArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -18,7 +19,7 @@ import java.util.UUID;
 
 @Service
 @AllArgsConstructor
-public class AppUserService implements UserDetailsService {
+public class AppUserServiceImpl implements AppUserService {
     private final static String USER_NOT_FOUND_MSG="Utilisateur avec email %s exist pas";
     private final AppUserRepository appUserRepository;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
@@ -29,6 +30,7 @@ public class AppUserService implements UserDetailsService {
         return appUserRepository.findByEmail(email)
                 .orElseThrow(()-> new UsernameNotFoundException(String.format(USER_NOT_FOUND_MSG,email)));
     }
+    @Override
     public String signUpUser(AppUser appUser){
         boolean userExists =appUserRepository.findByEmail(appUser.getEmail()).isPresent();
         if(userExists){
@@ -52,6 +54,7 @@ public class AppUserService implements UserDetailsService {
     }
 
 
+    @Override
     public void enableAppUser(String email) {
         appUserRepository.enableAppUser(email);
     }
