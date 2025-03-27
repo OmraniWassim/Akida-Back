@@ -1,5 +1,6 @@
 package com.akida.ecommerce.models;
 
+import com.akida.ecommerce.Enumarators.OrderStatus;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -36,7 +37,5 @@ public class Order extends BasicEntity{
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<OrderItem> items;
 
-    public enum OrderStatus {
-        PENDING, PROCESSING, SHIPPED, DELIVERED, CANCELLED
-    }
+
 }

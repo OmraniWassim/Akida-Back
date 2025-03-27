@@ -1,5 +1,6 @@
 package com.akida.ecommerce.models;
 
+import com.akida.ecommerce.Enumarators.InventoryStatus;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -30,8 +31,8 @@ public class Product extends BasicEntity{
     @Column(nullable = false)
     private int stockQuantity;
 
-    @Column(nullable = false)
-    private boolean isAvailable;
+    @Enumerated(EnumType.STRING)
+    private InventoryStatus inventoryStatus;
 
     @ManyToOne
     @JoinColumn(name = "category_id")
