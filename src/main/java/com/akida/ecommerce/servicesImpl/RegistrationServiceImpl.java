@@ -219,7 +219,23 @@ public class RegistrationServiceImpl implements RegistrationService {
         confirmationTokenService.setConfirmedAt(token);
         appUserService.enableAppUser(
                 confirmationToken.getAppUser().getEmail());
-        return "confirmed";
+        return """    
+                <div style="
+                        padding: 20px;
+                        background-color: #f0f8ff;
+                        border: 2px solid #4682b4;
+                        border-radius: 10px;
+                        color: #2e4a6b;
+                        font-family: Arial, sans-serif;
+                        text-align: center;
+                        max-width: 400px;
+                        margin: 20px auto;
+                        box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+                        ">
+                                <h2 style="color: #4682b4; margin-top: 0;">✅ Confirmation</h2>
+                                <p>Your action has been successfully completed!</p>
+                                </div>
+              """;
     }
 
     private String buildEmail(String email,String password,String name, String link) {
