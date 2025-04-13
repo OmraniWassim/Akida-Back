@@ -1,6 +1,7 @@
 package com.akida.ecommerce.models;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -9,7 +10,8 @@ import lombok.Data;
 @Table(name = "images")
 public class Image {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @SequenceGenerator(name="images_sequence",sequenceName ="images_sequence",allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE,generator = "images_sequence")
     private Long id;
 
     @Column(nullable = false)
@@ -29,9 +31,10 @@ public class Image {
 
     @ManyToOne
     @JoinColumn(name = "product_id")
+    @JsonIgnore
     private Product product;
 
-    @ManyToOne
-    @JoinColumn(name = "category_id")
+    @OneToOne(mappedBy = "image")
+    @JsonIgnore
     private Category category;
 }

@@ -3,6 +3,18 @@ server:
     include-message: always
     include-binding-errors: always
   port: 8081
+app:
+  storage:
+    base-dir: ./uploads
+    base-url: /uploads
+    product:
+      dir: products
+      thumbnail-width: 300
+      thumbnail-height: 300
+    category:
+      dir: categories
+      thumbnail-width: 200
+      thumbnail-height: 200
 
 spring:
   datasource:

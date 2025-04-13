@@ -1,6 +1,7 @@
 package com.akida.ecommerce.models;
 
 import com.akida.ecommerce.Enumarators.InventoryStatus;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -39,15 +40,19 @@ public class Product extends BasicEntity{
     private Category category;
 
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
+    @JsonIgnoreProperties({"product"})
     private List<ProductAttribute> attributes;
 
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
+    @JsonIgnoreProperties({"product"})
     private List<OrderItem> orderItems;
 
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
+    @JsonIgnoreProperties({"product"})
     private List<Favorite> favorites;
 
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
+    @JsonIgnoreProperties({"product"})
     private List<Rating> ratings;
 
     @ManyToOne
@@ -56,6 +61,7 @@ public class Product extends BasicEntity{
 
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
     @OrderBy("id ASC")
+    @JsonIgnoreProperties({"product"})
     private List<Image> images;
 
 }

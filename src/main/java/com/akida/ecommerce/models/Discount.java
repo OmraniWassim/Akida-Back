@@ -1,6 +1,7 @@
 package com.akida.ecommerce.models;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -28,5 +29,6 @@ public class Discount extends BasicEntity{
     private LocalDate endDate;
 
     @OneToMany(mappedBy = "discount", cascade = CascadeType.ALL)
+    @JsonIgnoreProperties({"discount"})
     private List<Product> products;
 }

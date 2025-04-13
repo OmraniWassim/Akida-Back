@@ -1,6 +1,7 @@
 package com.akida.ecommerce.models;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -20,9 +21,16 @@ public class Category extends BasicEntity {
     @Column(nullable = false, unique = true)
     private String name;
 
+    @Column(nullable = true)
+    private String description;
+
     @OneToMany(mappedBy = "category", cascade = CascadeType.ALL)
+    @JsonIgnoreProperties({"category"})
     private List<Product> products;
 
-    @OneToMany(mappedBy = "category", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Image> images;
+    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "image_id")
+    @JsonIgnoreProperties({"category"})
+    private Image image;
+
 }
