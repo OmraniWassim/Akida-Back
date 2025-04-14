@@ -3,7 +3,7 @@ package com.akida.ecommerce.security.config;
 
 import com.akida.ecommerce.filter.JwtAuthFilter;
 import com.akida.ecommerce.repository.AppUserRepository;
-import com.akida.ecommerce.servicesImpl.AppUserServiceImpl;
+import com.akida.ecommerce.serviceimpl.AppUserServiceImpl;
 import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

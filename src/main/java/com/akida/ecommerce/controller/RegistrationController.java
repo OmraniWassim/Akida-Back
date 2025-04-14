@@ -7,7 +7,7 @@ import com.akida.ecommerce.registration.LoginRequest;
 import com.akida.ecommerce.registration.PwdRequest;
 import com.akida.ecommerce.registration.RegistrationRequest;
 import com.akida.ecommerce.repository.AppUserRepository;
-import com.akida.ecommerce.servicesImpl.RegistrationServiceImpl;
+import com.akida.ecommerce.serviceimpl.RegistrationServiceImpl;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

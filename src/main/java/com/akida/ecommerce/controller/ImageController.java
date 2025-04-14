@@ -1,6 +1,6 @@
 package com.akida.ecommerce.controller;
 
-import com.akida.ecommerce.servicesImpl.FileSystemStorageService;
+import com.akida.ecommerce.serviceimpl.FileSystemStorageService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;

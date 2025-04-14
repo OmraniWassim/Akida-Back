@@ -40,8 +40,7 @@ public class CategoryController {
 
     @GetMapping
     public ResponseEntity<List<Category>> getCategories() {
-        List<Category> categories = categoryService.getAllCategories();
-        return new ResponseEntity<>(categories, HttpStatus.OK);
+        return new ResponseEntity<>(categoryService.getAllCategories(), HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")

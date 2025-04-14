@@ -1,4 +1,4 @@
-package com.akida.ecommerce.servicesImpl;
+package com.akida.ecommerce.serviceimpl;
 
 
 import com.akida.ecommerce.registration.EmailValidator;

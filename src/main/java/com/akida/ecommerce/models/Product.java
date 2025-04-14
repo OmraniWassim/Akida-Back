@@ -18,6 +18,9 @@ public class Product extends BasicEntity{
     @GeneratedValue(strategy = GenerationType.SEQUENCE,generator = "products_sequence")
     private Long id;
 
+    @Column(unique = true, nullable = false)
+    private String reference;
+
     @Column(nullable = false)
     private String name;
 
@@ -26,8 +29,6 @@ public class Product extends BasicEntity{
 
     @Column(nullable = false)
     private Double price;
-
-    private String imageUrl;
 
     @Column(nullable = false)
     private int stockQuantity;

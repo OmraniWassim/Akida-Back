@@ -1,4 +1,4 @@
-package com.akida.ecommerce.servicesImpl;
+package com.akida.ecommerce.serviceimpl;
 
 
 
@@ -9,7 +9,6 @@ import com.akida.ecommerce.repository.AppUserRepository;
 import com.akida.ecommerce.services.AppUserService;
 import lombok.AllArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;

@@ -1,4 +1,4 @@
-package com.akida.ecommerce.servicesImpl;
+package com.akida.ecommerce.serviceimpl;
 
 
 import org.springframework.beans.factory.annotation.Autowired;

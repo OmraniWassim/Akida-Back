@@ -1,4 +1,4 @@
-package com.akida.ecommerce.servicesImpl;
+package com.akida.ecommerce.serviceimpl;
 
 import com.akida.ecommerce.exceptions.StorageException;
 import com.akida.ecommerce.models.Category;

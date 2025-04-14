@@ -2,7 +2,7 @@ package com.akida.ecommerce.filter;
 
 
 
-import com.akida.ecommerce.servicesImpl.AppUserServiceImpl;
+import com.akida.ecommerce.serviceimpl.AppUserServiceImpl;
 import com.akida.ecommerce.security.JwtUtil;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;

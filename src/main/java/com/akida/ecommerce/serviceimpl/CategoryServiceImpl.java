@@ -1,4 +1,4 @@
-package com.akida.ecommerce.servicesImpl;
+package com.akida.ecommerce.serviceimpl;
 
 import com.akida.ecommerce.exceptions.EntityExistsException;
 import com.akida.ecommerce.exceptions.EntityNotFoundException;
@@ -21,7 +21,7 @@ import java.util.stream.Collectors;
 @Service
 @Transactional
 @RequiredArgsConstructor
-public class CategoryServiceImpl extends CategoryService {
+public class CategoryServiceImpl implements CategoryService {
 
     private final CategoryRepository categoryRepository;
     private final StorageService storageService;
