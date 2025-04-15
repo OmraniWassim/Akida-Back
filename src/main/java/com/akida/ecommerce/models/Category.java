@@ -33,4 +33,13 @@ public class Category extends BasicEntity {
     @JsonIgnoreProperties({"category"})
     private Image image;
 
+    @ManyToOne
+    @JoinColumn(name = "parent_id")
+    @JsonIgnoreProperties({"children", "products", "image", "parent"})
+    private Category parent;
+
+    @OneToMany(mappedBy = "parent", cascade = CascadeType.ALL)
+    @JsonIgnoreProperties({"parent", "products", "image", "children"})
+    private List<Category> children;
+
 }

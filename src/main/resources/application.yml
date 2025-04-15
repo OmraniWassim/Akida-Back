@@ -17,6 +17,10 @@ app:
       thumbnail-height: 200
 
 spring:
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 20MB
   datasource:
     url: jdbc:postgresql://aws-0-eu-central-1.pooler.supabase.com:5432/postgres
     username: postgres.qxyuokviqrgulvrrfcaj

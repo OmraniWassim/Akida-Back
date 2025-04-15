@@ -38,21 +38,29 @@ public class CategoryServiceImpl implements CategoryService {
         }
 
         category.setProducts(new ArrayList<>());
+        category.setChildren(new ArrayList<>());
         category.setImage(null);
+
+        // If parent ID is set, fetch and attach it
+        if (category.getParent() != null && category.getParent().getId() != null) {
+            Category parent = categoryRepository.findById(category.getParent().getId())
+                    .orElseThrow(() -> new EntityNotFoundException("Parent category not found"));
+            category.setParent(parent);
+        } else {
+            category.setParent(null);
+        }
 
         Category savedCategory = categoryRepository.save(category);
 
-        // Handle image upload if provided
         if (imageFile != null && !imageFile.isEmpty()) {
-            // Delete old image if exists
             if (savedCategory.getImage() != null) {
                 storageService.deleteImage(savedCategory.getImage());
             }
 
-            Image image = storageService.storeCategoryImage(imageFile,category);
+            Image image = storageService.storeCategoryImage(imageFile, savedCategory);
             image.setCategory(savedCategory);
             savedCategory.setImage(image);
-            categoryRepository.save(savedCategory); // Update with image
+            categoryRepository.save(savedCategory);
         }
 
         return savedCategory;
@@ -61,30 +69,40 @@ public class CategoryServiceImpl implements CategoryService {
     @Transactional
     @Override
     public Category update(Long categoryId, Category updatedCategory, MultipartFile imageFile) throws IOException {
-        // Find existing category
         Category existingCategory = categoryRepository.findById(categoryId)
                 .orElseThrow(() -> new EntityNotFoundException("Category not found with id: " + categoryId));
 
-        // Check if name is being changed and if new name already exists
+        // Check for name conflict
         if (!existingCategory.getName().equals(updatedCategory.getName()) &&
                 categoryRepository.existsByName(updatedCategory.getName())) {
-                throw new EntityExistsException("Category name '" + updatedCategory.getName() + "' already exists");
-            }
-
+            throw new EntityExistsException("Category name '" + updatedCategory.getName() + "' already exists");
+        }
 
         // Update basic fields
         existingCategory.setName(updatedCategory.getName());
         existingCategory.setDescription(updatedCategory.getDescription());
 
+        //  Handle parent update
+        if (updatedCategory.getParent() != null && updatedCategory.getParent().getId() != null) {
+            // Prevent category being its own parent
+            if (updatedCategory.getParent().getId().equals(existingCategory.getId())) {
+                throw new IllegalArgumentException("A category cannot be its own parent");
+            }
+
+            Category newParent = categoryRepository.findById(updatedCategory.getParent().getId())
+                    .orElseThrow(() -> new EntityNotFoundException("Parent category not found"));
+            existingCategory.setParent(newParent);
+        } else {
+            existingCategory.setParent(null); // Unlink parent if null
+        }
+
         // Handle image update
         if (imageFile != null && !imageFile.isEmpty()) {
-            // Delete old image if exists
             if (existingCategory.getImage() != null) {
                 storageService.deleteImage(existingCategory.getImage());
                 existingCategory.setImage(null);
             }
 
-            // Store new image
             Image newImage = storageService.storeCategoryImage(imageFile, existingCategory);
             newImage.setCategory(existingCategory);
             existingCategory.setImage(newImage);
