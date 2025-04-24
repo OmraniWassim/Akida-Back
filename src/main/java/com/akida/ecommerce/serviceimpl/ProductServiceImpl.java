@@ -16,6 +16,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 @Service
@@ -67,6 +68,56 @@ public class ProductServiceImpl  implements ProductService {
         return savedProduct;
     }
 
+    @Transactional
+    @Override
+    public Product updateProduct(Long productId, Product updatedProduct, List<MultipartFile> imageFiles, List<Long> deletedImageIds) throws IOException {
+        // 1. Find existing product with images
+        Product existingProduct = productRepository.findById(productId)
+                .orElseThrow(() -> new EntityNotFoundException("Product not found with id: " + productId));
+
+        if (!existingProduct.getReference().equals(updatedProduct.getReference()) &&
+                productRepository.existsByReference(updatedProduct.getReference())) {
+            throw new EntityExistsException("Product reference '" + updatedProduct.getReference() + "' already exists");
+        }
+
+        existingProduct.setName(updatedProduct.getName());
+        existingProduct.setDescription(updatedProduct.getDescription());
+        existingProduct.setPrice(updatedProduct.getPrice());
+        existingProduct.setStockQuantity(updatedProduct.getStockQuantity());
+        existingProduct.setReference(updatedProduct.getReference());
+        existingProduct.setDiscount(updatedProduct.getDiscount());
+        existingProduct.setInventoryStatus(updatedProduct.getInventoryStatus());
+
+
+
+        if (updatedProduct.getCategory() != null ) {
+            Category category = categoryRepository.findById(updatedProduct.getCategory().getId())
+                    .orElseThrow(() -> new EntityNotFoundException("Category not found"));
+            existingProduct.setCategory(category);
+        } else {
+            existingProduct.setCategory(null);
+        }
+
+        Iterator<Image> iterator = existingProduct.getImages().iterator();
+        while (iterator.hasNext()) {
+            Image image = iterator.next();
+            if (deletedImageIds.contains(image.getId())) {
+                storageService.deleteImage(image);
+                iterator.remove();
+            }
+        }
+
+        if (imageFiles != null) {
+            for (MultipartFile file : imageFiles) {
+                if (!file.isEmpty()) {
+                    Image newImage = storageService.storeProductImage(file, existingProduct);
+                    existingProduct.getImages().add(newImage);
+                }
+            }
+        }
+
+        return productRepository.save(existingProduct);
+    }
     @Override
     public List<Product> getAllProducts() {
         return productRepository.findAll();

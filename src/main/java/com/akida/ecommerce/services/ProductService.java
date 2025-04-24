@@ -11,5 +11,8 @@ public interface ProductService {
     @Transactional
     Product createProduct(Product product, List<MultipartFile> imageFiles) throws IOException;
 
+    @Transactional
+    Product updateProduct(Long productId, Product updatedProduct, List<MultipartFile> newImageFiles, List<Long> deletedImageIds) throws IOException;
+
     List<Product> getAllProducts();
 }
