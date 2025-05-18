@@ -1,5 +1,6 @@
 package com.akida.ecommerce.services;
 
+import com.akida.ecommerce.DTO.CategoryHierarchyDto;
 import com.akida.ecommerce.models.Category;
 import jakarta.transaction.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -21,6 +22,10 @@ public  interface CategoryService {
 
     List<Category> getAllCategories();
 
+    Category getCategoryById(Long categoryId);
+
     @Transactional
     void deleteCategories(List<Long> categoryIds) throws IOException;
+
+    List<CategoryHierarchyDto> getFullHierarchy();
 }

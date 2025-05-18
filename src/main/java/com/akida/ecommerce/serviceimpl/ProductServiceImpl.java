@@ -123,5 +123,16 @@ public class ProductServiceImpl  implements ProductService {
         return productRepository.findAll();
     }
 
+    @Override
+    public List<Product> getProductsByCategory(Long categoryId) {
+        return productRepository.findByCategory_Id(categoryId);
+    }
+
+    @Override
+    public Product getProductById(Long id) {
+        return productRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Product not found with id: " + id));
+    }
+
 
 }

@@ -1,5 +1,6 @@
 package com.akida.ecommerce.serviceimpl;
 
+import com.akida.ecommerce.DTO.CategoryHierarchyDto;
 import com.akida.ecommerce.exceptions.EntityExistsException;
 import com.akida.ecommerce.exceptions.EntityNotFoundException;
 import com.akida.ecommerce.models.Category;
@@ -25,6 +26,7 @@ public class CategoryServiceImpl implements CategoryService {
 
     private final CategoryRepository categoryRepository;
     private final StorageService storageService;
+
 
     @Transactional
     @Override
@@ -136,6 +138,12 @@ public class CategoryServiceImpl implements CategoryService {
         return categoryRepository.findAll();
     }
 
+    @Override
+    public Category getCategoryById(Long categoryId) {
+        return categoryRepository.findById(categoryId)
+                .orElseThrow(() -> new EntityNotFoundException("Category not found with id: " + categoryId));
+    }
+
     @Transactional
     @Override
     public void deleteCategories(List<Long> categoryIds) throws IOException {
@@ -175,6 +183,37 @@ public class CategoryServiceImpl implements CategoryService {
 
         // Bulk delete categories
         categoryRepository.deleteAllInBatch(categories);
+    }
+
+    @Override
+    public List<CategoryHierarchyDto> getFullHierarchy() {
+        List<Category> rootCategories = categoryRepository.findAllRootCategories();
+        return mapCategoriesToDto(rootCategories);
+    }
+
+    private List<CategoryHierarchyDto> mapCategoriesToDto(List<Category> categories) {
+        return categories.stream()
+                .map(this::convertToHierarchyDto)
+                .collect(Collectors.toList());
+    }
+
+    private CategoryHierarchyDto convertToHierarchyDto(Category category) {
+        CategoryHierarchyDto dto = new CategoryHierarchyDto();
+        dto.setId(category.getId());
+        dto.setName(category.getName());
+        dto.setDescription(category.getDescription());
+
+        if (category.getImage() != null) {
+            dto.setImagePath(category.getImage().getThumbnailPath());
+        }
+
+        if (category.getChildren() != null && !category.getChildren().isEmpty()) {
+            dto.setChildren(mapCategoriesToDto(category.getChildren()));
+        } else {
+            dto.setChildren(new ArrayList<>());
+        }
+
+        return dto;
     }
 
 }

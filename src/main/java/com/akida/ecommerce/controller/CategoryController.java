@@ -1,5 +1,6 @@
 package com.akida.ecommerce.controller;
 
+import com.akida.ecommerce.DTO.CategoryHierarchyDto;
 import com.akida.ecommerce.exceptions.EntityNotFoundException;
 import com.akida.ecommerce.models.Category;
 import com.akida.ecommerce.services.CategoryService;
@@ -43,6 +44,15 @@ public class CategoryController {
         return new ResponseEntity<>(categoryService.getAllCategories(), HttpStatus.OK);
     }
 
+    @GetMapping("/{id}")
+    public ResponseEntity<Category> getCategory(@PathVariable Long id) {
+        try {
+            return ResponseEntity.ok(categoryService.getCategoryById(id));
+        } catch (EntityNotFoundException e) {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteCategory(@PathVariable Long id) {
         try {
@@ -71,6 +81,11 @@ public class CategoryController {
         } catch (IOException e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
+    }
+
+    @GetMapping("/hierarchy")
+    public ResponseEntity<List<CategoryHierarchyDto>> getCategoryHierarchy() {
+        return ResponseEntity.ok(categoryService.getFullHierarchy());
     }
 
 }

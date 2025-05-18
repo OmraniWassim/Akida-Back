@@ -15,4 +15,8 @@ public interface ProductService {
     Product updateProduct(Long productId, Product updatedProduct, List<MultipartFile> newImageFiles, List<Long> deletedImageIds) throws IOException;
 
     List<Product> getAllProducts();
+
+    List<Product> getProductsByCategory(Long categoryId);
+
+    Product getProductById(Long id);
 }
