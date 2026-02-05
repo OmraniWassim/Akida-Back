@@ -1,6 +1,7 @@
 package com.akida.ecommerce.models;
 
 import com.akida.ecommerce.Enumarators.InventoryStatus;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -46,6 +47,7 @@ public class Product extends BasicEntity{
 
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
     @JsonIgnoreProperties({"product"})
+    @JsonIgnore
     private List<OrderItem> orderItems;
 
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)

@@ -1,11 +1,12 @@
 package com.akida.ecommerce.models;
 
 import com.akida.ecommerce.Enumarators.OrderStatus;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
@@ -19,7 +20,7 @@ public class Order extends BasicEntity{
     private Long id;
 
     @Column(nullable = false)
-    private LocalDate orderDate;
+    private LocalDateTime orderDate;
 
     @Enumerated(EnumType.STRING)
     private OrderStatus status;
@@ -35,6 +36,7 @@ public class Order extends BasicEntity{
     private AppUser appUser;
 
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnoreProperties({"order"})
     private List<OrderItem> items;
 
 

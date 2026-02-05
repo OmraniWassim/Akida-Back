@@ -7,6 +7,8 @@ public record AppUserDTO (
         String FirstName,
         String LastName,
         String email,
+        Long telNumber,
+        String address,
         List<String> appUserRoles,
         Boolean enabled
 

@@ -2,6 +2,7 @@ package com.akida.ecommerce.models;
 
 
 import com.akida.ecommerce.Enumarators.AppUserRole;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -38,6 +39,7 @@ public class AppUser extends BasicEntity implements UserDetails {
     private String address;
     private Long cin;
     @OneToMany(mappedBy = "appUser", cascade = CascadeType.ALL)
+    @JsonIgnoreProperties({"appUser"})
     private List<Order> orders;
 
     @OneToMany(mappedBy = "appUser", cascade = CascadeType.ALL)
