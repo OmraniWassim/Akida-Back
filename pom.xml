@@ -10,7 +10,7 @@
 	</parent>
 	<groupId>com.akida</groupId>
 	<artifactId>ecommerce</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>0.0.1</version>
 	<name>ecommerce</name>
 	<properties>
 		<java.version>17</java.version>
@@ -100,11 +100,19 @@
 
 	</dependencies>
 	<distributionManagement>
+
+		<snapshotRepository>
+			<id>nexus-snapshots</id>
+			<url>http://192.168.56.20:8083/repository/maven-snapshots/</url>
+		</snapshotRepository>
+
 		<repository>
-			<id>nexus</id>
+			<id>nexus-releases</id>
 			<url>http://192.168.56.20:8083/repository/maven-releases/</url>
 		</repository>
+
 	</distributionManagement>
+
 	<build>
 		<plugins>
 			<plugin>
