@@ -1,0 +1,22 @@
+services:
+  backend:
+    image: akida-back:latest
+    container_name: akida-back
+    ports:
+      - "8080:8081"   # Host 8080 -> Container 8081 (Spring Boot)
+    networks:
+      - akida-network
+
+  frontend:
+    image: akida-front:1.0
+    container_name: akida-front
+    ports:
+      - "8081:80"     # Host 8081 -> Container 80 (Nginx)
+    depends_on:
+      - backend
+    networks:
+      - akida-network
+
+networks:
+  akida-network:
+    driver: bridge
