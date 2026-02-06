@@ -99,7 +99,12 @@
 		</dependency>
 
 	</dependencies>
-
+	<distributionManagement>
+		<repository>
+			<id>nexus</id>
+			<url>http://192.168.56.20:8083/repository/maven-releases/</url>
+		</repository>
+	</distributionManagement>
 	<build>
 		<plugins>
 			<plugin>
