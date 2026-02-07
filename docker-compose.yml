@@ -1,6 +1,6 @@
 services:
   backend:
-    image: akida-back:latest
+    image: wassim560/akida-back:latest
     container_name: akida-back
     ports:
       - "8081:8081"
